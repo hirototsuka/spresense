@@ -1,0 +1,51 @@
+############################################################################
+# externals/libjpeg/Makefile
+#
+#   Copyright 2018, 2021 Sony Semiconductor Solutions Corporation
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in
+#    the documentation and/or other materials provided with the
+#    distribution.
+# 3. Neither the name of Sony Semiconductor Solutions Corporation nor
+#    the names of its contributors may be used to endorse or promote
+#    products derived from this software without specific prior written
+#    permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+# FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+# COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+# INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+# BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+# OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+# AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+# ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+#
+############################################################################
+
+include $(APPDIR)/Make.defs
+-include $(SDKDIR)/Make.defs
+
+BIN = libjpeg$(LIBEXT)
+
+CSRCS =  jaricom.c  jcomapi.c
+CSRCS += jdapimin.c jdapistd.c jdarith.c jdatasrc.c jdcoefct.c jdcolor.c
+CSRCS += jddctmgr.c jdhuff.c jdinput.c jdmainct.c jdmarker.c jdmaster.c
+CSRCS += jdmerge.c jdpostct.c jdsample.c jdtrans.c jerror.c
+CSRCS += jidctflt.c jidctfst.c jidctint.c jquant1.c
+CSRCS += jquant2.c jutils.c jmemmgr.c
+CSRCS += jmemname.c
+
+CFLAGS += -DTEMP_DIRECTORY=\"$(CONFIG_EXTERNALS_LIBJPEG_TEMP_DIR)\"
+
+include $(APPDIR)/Application.mk

@@ -1,155 +1,90 @@
-# spresense-dmic-recorder
+[![twitter spresense handle][]][twitter spresense badge]
+[![twitter devworld handle][]][twitter devworld badge]
 
-Spresense のデジタルマイク（最大8ch）で録音し、SDカードに WAV で保存するための独自コードと手順。
-公式 [Spresense SDK](https://github.com/sonydevworld/spresense) **v3.3.0** に、このリポジトリの `overlay/` を重ねて使う。
+# Welcome to SPRESENSE project
 
-## このリポジトリに入っているもの
-
-| パス | 内容 |
-|---|---|
-| `overlay/examples/audiolite_wavrecorder/` | 8ch録音アプリ（48kHz / 16bit / 8ch、録音秒数を引数で指定、メタデータ `*_md.txt` も出力） |
-| `overlay/sdk/modules/audiolite/src/components/al_inputcomp.cxx` | audiolite の入力上限を 4ch → **8ch** に変更（`MIC_MAXCH 8`） |
-| `overlay/myapps/audiofilesender/` | 録音ファイル送信アプリ（PC側の受信スクリプト `receiver.py` 付き） |
-| `overlay/myapps/audiofilestreamer/` | 録音ストリーミングアプリ |
-| `scripts/setup_sdk.sh` | 公式SDK v3.3.0 の取得 ＋ overlay の適用 |
-| `scripts/apply_overlay.sh` | 既存のSDKに overlay だけ適用 |
-| `scripts/build_dmic.sh` | デジタルマイク設定（MICID）でビルド |
-
-開発環境（ツールチェーン、約700MB）とSDK本体は含めていない。下の手順で入手する。
-
----
-
-## 全体の流れ
+Clone this repository and update submodules.
 
 ```
-[初回のみ] 0. WSL/USB の準備 → 1. 開発環境 → 2. SDK取得 → 3. ローダー書き込み
-[毎回]     4. ボード接続 → 5. ビルド → 6. 書き込み → 7. 録音
+$ git clone --recursive https://github.com/sonydevworld/spresense.git
 ```
 
-### 0. WSL / USB の準備（初回のみ）
-
-Windows + WSL2 (Ubuntu) を前提とする。
-
-```bash
-# WSL: シリアルポートを使えるようにする（実行後に WSL を開き直す）
-sudo usermod -aG dialout $USER
-```
-
-```powershell
-# Windows: 「管理者」PowerShell でボードを共有する
-usbipd list                  # CP210x の BUSID を確認（例: 2-2）
-usbipd bind --busid 2-2
-```
-
-### 1. 開発環境（初回のみ）
-
-公式SDKに含まれる `install-tools.sh` で `~/spresenseenv` にツールチェーンを入れる（2. の後でも可）。
-
-```bash
-cd ~/spresense && ./install-tools.sh
-```
-
-以降、**新しいターミナルを開いたら毎回**次を実行する。
-
-```bash
-source ~/spresenseenv/setup
-```
-
-### 2. SDK の取得（初回のみ）
-
-```bash
-git clone https://github.com/hirototsuka/spresense-dmic-recorder.git
-cd spresense-dmic-recorder
-./scripts/setup_sdk.sh      # ~/spresense に公式 v3.3.0 を取得して overlay を適用
-```
-
-`~/spresense` が既にある場合は、取得は不要で overlay だけ適用する。
-
-```bash
-./scripts/apply_overlay.sh  # ~/spresense に overlay を適用
-```
-
-### 3. v3.3.0 ローダーの書き込み（初回のみ）
-
-[Spresense ファームウェア v3.3.0](https://developer.sony.com/file/download/download-spresense-firmware-v3-3-0) の zip を取得してから:
-
-```bash
-source ~/spresenseenv/setup
-cd ~/spresense/sdk
-./tools/flash.sh -e ~/spresense-binaries-v3.3.0.zip
-./tools/flash.sh -l ~/spresense/firmware/spresense -c /dev/ttyUSB0
-```
-
-### 4. ボードを WSL に接続（PC再起動・USB抜き差しのたび）
-
-```powershell
-# Windows: 通常の PowerShell
-usbipd attach --wsl --busid 2-2
-```
-
-```bash
-ls /dev/ttyUSB*      # /dev/ttyUSB0 が見えればOK
-```
-
-### 5. ビルド
-
-```bash
-./scripts/build_dmic.sh        # ~/spresense を 8ch（MICID CH0〜7 = 5〜12）
-```
-
-手作業でやる場合（スクリプトと同じ内容）:
-
-```bash
-source ~/spresenseenv/setup
-cd ~/spresense/sdk/
-make distclean
-./tools/config.py default examples/audiolite_wavrecorder
-make menuconfig    # '/' で micid を検索し、CH0〜7 を 5,6,7,8,9,10,11,12 に変更して保存
-make
-```
-
-> `config.py` はマイク設定を初期値（1,2,3,4,15…＝アナログ）に戻すので、MICID の変更は必ず `config.py` の **後** に行う。
-
-### 6. 書き込み
-
-```bash
-cd ~/spresense/sdk
-./tools/flash.sh -c /dev/ttyUSB0 nuttx.spk
-```
-
-### 7. 録音
-
-```bash
-screen /dev/ttyUSB0 115200      # 終了: Ctrl+A → \ → y
-```
+# Submodules
 
 ```
-nsh> ls /mnt                                     # sd0/ が見えるまで待つ（起動後数秒）
-nsh> audiolite_wavrecorder /mnt/sd0/test 10      # 10秒録音
+spresense                  - This repository
+|-- nuttx                  - NuttX original kernel + SPRESENSE port
+|-- sdk
+|   `-- apps               - NuttX original application + SPRESENSE port
+`-- externals
+    `-- nnablart
+      `-- nnabla-c-runtime - Neural Network Runtime library
 ```
 
-→ `/mnt/sd0/test_00.wav`（48kHz / 16bit / 8ch）と `/mnt/sd0/test_md.txt` ができる。
+## Update SDK2.x.x to SDK3.x.x
 
-> 同じプレフィックスの既存ファイル（`test_00.wav` 等）は**録音前に自動削除される**。残したいデータと同じ名前を使わないこと。
+The URL of the submodule (nuttx, sdk/apps) in the spresense repository has been changed since SDK3.0.0. If you cloned the repository before SDK2.x, please run the following instructions to update the URL of the submodule.
 
----
+```
+$ cd spresense
+$ git fetch origin
+$ git checkout <remote branch>
+$ git submodule sync
+$ git submodule update
+```
+* `<remote branch>`
+  * For master branch: `origin/master`
+  * For develop branch: `origin/develop`
 
-## マイク設定（MICID）
+# Spresense SDK build instructions
 
-| MICID | 意味 |
-|---|---|
-| 1〜4 | アナログマイク A〜D |
-| 5〜12 | デジタルマイク 0〜7 |
-| 15 | 未使用 |
+Build instructions are documented at [Spresense SDK Getting Started Guide](https://developer.sony.com/develop/spresense/docs/sdk_set_up_en.html).
 
-ドライバが受け付ける最大チャンネル数は「15 以外の MICID の数」。アプリが要求するチャンネル数（`NUM_CHANNELS`）以上にしておくこと。
+## Prerequisites
 
-## トラブルシューティング
+Install the necessary packages and GCC ARM toolchain for cross-compilation.
+```
+$ wget https://raw.githubusercontent.com/sonydevworld/spresense/master/install-tools.sh
+$ bash install-tools.sh
+```
 
-| 症状 | 原因の目安 |
-|---|---|
-| `config.py` が `../nuttx/tools/Config.mk: No such file or directory` で失敗 | SDK のサブモジュール（`nuttx/` 等）が空。zip で取得すると空になる。`git clone --recursive` で取得する |
-| `Cannot open port : /dev/ttyUSB0` | `dialout` 未所属、または `screen` がポートを使用中（`screen -ls` で残ったセッションを確認） |
-| `Start error..: -1` | SDカードのマウント前に実行した。`ls /mnt` で `sd0` を確認してから実行 |
-| 全チャンネルが一定値（最初 -32768 付近 → 0 に収束） | マイクのデータ線が止まっている。配線・電源・クロックを確認 |
-| L と R がサンプル単位で完全一致 | 同じデータ線上で実際に信号を出しているマイクが1個だけ。2個目の L/R 選択ピン・電源・配線を確認 |
+## Build
+
+Go to the folder where you cloned the {SDK_FULL}, and enter the `sdk` folder name:
+``` bash
+$ cd spresense/sdk
+```
+Set up the SDK configuration
+``` bash
+$ tools/config.py examples/hello
+```
+Build the example image:
+``` bash
+$ make
+```
+
+A `nuttx.spk` file appears in the `sdk` folder when this step has successfully finished.
+This file is the final result and can be flashed into the your board.
+
+# Using docker
+
+A pre-compiled docker container is available with all the pre-requisite that is needed in order to build the Spresense SDK.
+
+In order to start using it simply type:
+
+```
+$ source spresense_env.sh
+```
+
+This script will create an alias `spresense` which should proceed the regular SDK build scripts and Make commands.
+
+Examples:
+```
+SpresenseSDK: $ spresense tools/config.py examples/hello
+SpresenseSDK: $ spresense make
+```
+
+[twitter spresense handle]: https://img.shields.io/twitter/follow/SpresensebySony?style=social&logo=twitter
+[twitter spresense badge]: https://twitter.com/intent/follow?screen_name=SpresensebySony
+[twitter devworld handle]: https://img.shields.io/twitter/follow/SonyDevWorld?style=social&logo=twitter
+[twitter devworld badge]: https://twitter.com/intent/follow?screen_name=SonyDevWorld

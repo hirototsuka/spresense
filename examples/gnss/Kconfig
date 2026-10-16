@@ -1,0 +1,47 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config EXAMPLES_GNSS
+	tristate "GNSS positioning example"
+	default n
+	depends on CXD56_GNSS || CXD56_GNSS_ADDON
+	---help---
+		Enable the Simple GNSS positioning example
+
+if EXAMPLES_GNSS
+
+config EXAMPLES_GNSS_PROGNAME
+	string "Program name"
+	default "gnss"
+	---help---
+		This is the name of the program that will be use when the NSH ELF
+		program is installed.
+
+config EXAMPLES_GNSS_PRIORITY
+	int "GNSS task priority"
+	default 100
+
+config EXAMPLES_GNSS_STACKSIZE
+	int "GNSS stack size"
+	default 2048
+
+choice
+	prompt "Event notification"
+	default EXAMPLES_GNSS_USE_POLL
+
+config EXAMPLES_GNSS_USE_POLL
+	bool "Polling notification"
+
+config EXAMPLES_GNSS_USE_SIGNAL
+	bool "Signal notification"
+
+endchoice # Event notification
+
+config EXAMPLES_GNSS_DEVNAME
+	string "GNSS device name"
+	default "/dev/gps2" if CXD56_GNSS_ADDON
+	default "/dev/gps"
+
+endif

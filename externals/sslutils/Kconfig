@@ -1,0 +1,25 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config EXTERNALS_SSLUTILS
+	bool "mbedTLS connection utility support"
+	default y if EXTERNALS_MBEDTLS || LTE_NET_MBEDTLS
+	depends on NET_TCP && (EXTERNALS_MBEDTLS || LTE_NET_MBEDTLS)
+	---help---
+		Enable support mbedTLS connection utility. Some examples are using
+		this utility for connection TLS socket.
+
+if EXTERNALS_SSLUTILS
+
+config EXTERNALS_SSLUTILS_LOGLEVEL
+	int "mbedTLS debug log level (0 to 5)"
+	range 0 5
+	default 0
+	---help---
+		Set debug log level of mbedTLS library.
+		0 is no log message. If set this more than 0, you can see debug log
+		mbedTLS library outputs. 5 is the maximum (Most verbose).
+
+endif

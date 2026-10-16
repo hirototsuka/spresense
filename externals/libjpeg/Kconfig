@@ -1,0 +1,22 @@
+#
+# For a description of the syntax of this configuration file,
+# see the file kconfig-language.txt in the NuttX tools repository.
+#
+
+config EXTERNALS_LIBJPEG
+	bool "libjpeg"
+	default n
+	---help---
+		Enable libjpeg.
+		libjpeg is provided from http://www.ijg.org/files/jpegsrc.v9c.tar.gz
+
+if EXTERNALS_LIBJPEG
+
+config EXTERNALS_LIBJPEG_TEMP_DIR
+	string "Temporary directory"
+	default "/mnt/spif/"
+	---help---
+		This is the directory path including the trailing slash '/'
+		to store the temporary files created by libjpeg.
+
+endif # EXTERNALS_LIBJPEG

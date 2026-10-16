@@ -1,9 +1,4 @@
-*.o
-*.a
-.built
-.depend
-Make.dep
-nuttx.spk
-__pycache__/
-*.pyc
-*:Zone.Identifier
+.vscode
+firmware/*/*.spk
+firmware/*/*.espk
+firmware/*/stored_version.json
