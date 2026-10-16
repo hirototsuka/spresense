@@ -1,0 +1,25 @@
+
+config AUDIOFILESENDER
+	tristate "User app : audiofilesender app"
+	default n
+	---help---
+		Enable the audiofilesender app
+
+if AUDIOFILESENDER
+
+config AUDIOFILESENDER_PROGNAME
+	string "Program name"
+	default "audiofilesender"
+	---help---
+		This is the name of the program that will be use when the NSH ELF
+		program is installed.
+
+config AUDIOFILESENDER_PRIORITY
+	int "audiofilesender task priority"
+	default 100
+
+config AUDIOFILESENDER_STACKSIZE
+	int "audiofilesender stack size"
+	default 2048
+
+endif

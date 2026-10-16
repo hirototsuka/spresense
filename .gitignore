@@ -1,0 +1,9 @@
+*.o
+*.a
+.built
+.depend
+Make.dep
+nuttx.spk
+__pycache__/
+*.pyc
+*:Zone.Identifier

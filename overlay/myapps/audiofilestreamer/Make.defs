@@ -1,0 +1,4 @@
+
+ifneq ($(CONFIG_AUDIOFILESTREAMER),)
+CONFIGURED_APPS += audiofilestreamer
+endif

@@ -1,0 +1,9 @@
+/Kconfig
+.depend
+.built
+.context
+Make.dep
+/*.a
+*.o
+.cache/
+compile_commands.json

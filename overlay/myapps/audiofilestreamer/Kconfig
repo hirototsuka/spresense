@@ -1,0 +1,25 @@
+
+config AUDIOFILESTREAMER
+	tristate "User app : audiofilestreamer app"
+	default n
+	---help---
+		Enable the audiofilestreamer app
+
+if AUDIOFILESTREAMER
+
+config AUDIOFILESTREAMER_PROGNAME
+	string "Program name"
+	default "audiofilestreamer"
+	---help---
+		This is the name of the program that will be use when the NSH ELF
+		program is installed.
+
+config AUDIOFILESTREAMER_PRIORITY
+	int "audiofilestreamer task priority"
+	default 100
+
+config AUDIOFILESTREAMER_STACKSIZE
+	int "audiofilestreamer stack size"
+	default 2048
+
+endif
