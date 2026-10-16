@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # 公式 Spresense SDK v3.3.0 を取得し、このリポジトリの独自コード（overlay）を重ねる
 #
-#   使い方: ./scripts/setup_sdk.sh [SDKを置くディレクトリ]   (既定: ~/spresense-backup-developSITv330)
+#   使い方: ./scripts/setup_sdk.sh [SDKを置くディレクトリ]   (既定: ~/spresense)
 
 set -euo pipefail
 
-SDK_DIR="${1:-$HOME/spresense-backup-developSITv330}"
+SDK_DIR="${1:-$HOME/spresense}"
 SDK_TAG="v3.3.0"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 

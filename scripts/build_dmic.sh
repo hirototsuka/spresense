@@ -3,7 +3,7 @@
 # （手順書の config → menuconfig(MICID変更) → make を自動化したもの）
 #
 #   使い方: ./scripts/build_dmic.sh [SDKディレクトリ] [マイク数]
-#           SDKディレクトリ 既定: ~/spresense-backup-developSITv330
+#           SDKディレクトリ 既定: ~/spresense
 #           マイク数        既定: 8（CH0〜7 = デジタルマイク0〜7 = MICID 5〜12）
 #
 #   ※ overlay の録音コードは 8ch 固定（NUM_CHANNELS 8）。
@@ -12,7 +12,7 @@
 
 set -euo pipefail
 
-SDK_DIR="${1:-$HOME/spresense-backup-developSITv330}"
+SDK_DIR="${1:-$HOME/spresense}"
 NUM_MICS="${2:-8}"
 
 if [ "$NUM_MICS" -lt 1 ] || [ "$NUM_MICS" -gt 8 ]; then

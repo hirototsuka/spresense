@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # overlay/ 以下の独自コードを SDK ディレクトリへ上書きコピーする
 #
-#   使い方: ./scripts/apply_overlay.sh [SDKディレクトリ]   (既定: ~/spresense-backup-developSITv330)
+#   使い方: ./scripts/apply_overlay.sh [SDKディレクトリ]   (既定: ~/spresense)
 
 set -euo pipefail
 
-SDK_DIR="${1:-$HOME/spresense-backup-developSITv330}"
+SDK_DIR="${1:-$HOME/spresense}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 if [ ! -d "$SDK_DIR/sdk" ]; then

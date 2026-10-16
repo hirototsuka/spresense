@@ -46,7 +46,7 @@ usbipd bind --busid 2-2
 公式SDKに含まれる `install-tools.sh` で `~/spresenseenv` にツールチェーンを入れる（2. の後でも可）。
 
 ```bash
-cd ~/spresense-backup-developSITv330 && ./install-tools.sh
+cd ~/spresense && ./install-tools.sh
 ```
 
 以降、**新しいターミナルを開いたら毎回**次を実行する。
@@ -60,13 +60,13 @@ source ~/spresenseenv/setup
 ```bash
 git clone https://github.com/hirototsuka/spresense-dmic-recorder.git
 cd spresense-dmic-recorder
-./scripts/setup_sdk.sh      # ~/spresense-backup-developSITv330 に公式 v3.3.0 を取得して overlay を適用
+./scripts/setup_sdk.sh      # ~/spresense に公式 v3.3.0 を取得して overlay を適用
 ```
 
-`~/spresense-backup-developSITv330` が既にある場合は、取得は不要で overlay だけ適用する。
+`~/spresense` が既にある場合は、取得は不要で overlay だけ適用する。
 
 ```bash
-./scripts/apply_overlay.sh  # ~/spresense-backup-developSITv330 に overlay を適用
+./scripts/apply_overlay.sh  # ~/spresense に overlay を適用
 ```
 
 ### 3. v3.3.0 ローダーの書き込み（初回のみ）
@@ -75,9 +75,9 @@ cd spresense-dmic-recorder
 
 ```bash
 source ~/spresenseenv/setup
-cd ~/spresense-backup-developSITv330/sdk
+cd ~/spresense/sdk
 ./tools/flash.sh -e ~/spresense-binaries-v3.3.0.zip
-./tools/flash.sh -l ~/spresense-backup-developSITv330/firmware/spresense -c /dev/ttyUSB0
+./tools/flash.sh -l ~/spresense/firmware/spresense -c /dev/ttyUSB0
 ```
 
 ### 4. ボードを WSL に接続（PC再起動・USB抜き差しのたび）
@@ -94,14 +94,14 @@ ls /dev/ttyUSB*      # /dev/ttyUSB0 が見えればOK
 ### 5. ビルド
 
 ```bash
-./scripts/build_dmic.sh        # ~/spresense-backup-developSITv330 を 8ch（MICID CH0〜7 = 5〜12）
+./scripts/build_dmic.sh        # ~/spresense を 8ch（MICID CH0〜7 = 5〜12）
 ```
 
 手作業でやる場合（スクリプトと同じ内容）:
 
 ```bash
 source ~/spresenseenv/setup
-cd ~/spresense-backup-developSITv330/sdk/
+cd ~/spresense/sdk/
 make distclean
 ./tools/config.py default examples/audiolite_wavrecorder
 make menuconfig    # '/' で micid を検索し、CH0〜7 を 5,6,7,8,9,10,11,12 に変更して保存
@@ -113,7 +113,7 @@ make
 ### 6. 書き込み
 
 ```bash
-cd ~/spresense-backup-developSITv330/sdk
+cd ~/spresense/sdk
 ./tools/flash.sh -c /dev/ttyUSB0 nuttx.spk
 ```
 
