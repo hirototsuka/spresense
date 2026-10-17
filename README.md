@@ -1,29 +1,29 @@
 [![twitter spresense handle][]][twitter spresense badge]
 [![twitter devworld handle][]][twitter devworld badge]
 
-# SPRESENSE プロジェクトへようこそ
+# Welcome to SPRESENSE project
 
-このリポジトリをクローンし、サブモジュールを更新します。
+Clone this repository and update submodules.
 
 ```
 $ git clone --recursive https://github.com/sonydevworld/spresense.git
 ```
 
-# サブモジュール
+# Submodules
 
 ```
-spresense                  - このリポジトリ
-|-- nuttx                  - NuttX 本家のカーネル + SPRESENSE 向け移植
+spresense                  - This repository
+|-- nuttx                  - NuttX original kernel + SPRESENSE port
 |-- sdk
-|   `-- apps               - NuttX 本家のアプリケーション + SPRESENSE 向け移植
+|   `-- apps               - NuttX original application + SPRESENSE port
 `-- externals
     `-- nnablart
-      `-- nnabla-c-runtime - ニューラルネットワーク実行ライブラリ
+      `-- nnabla-c-runtime - Neural Network Runtime library
 ```
 
-## SDK2.x.x から SDK3.x.x への更新
+## Update SDK2.x.x to SDK3.x.x
 
-SDK3.0.0 以降、spresense リポジトリのサブモジュール（nuttx、sdk/apps）の URL が変更されました。SDK2.x 以前にリポジトリをクローンした場合は、次の手順でサブモジュールの URL を更新してください。
+The URL of the submodule (nuttx, sdk/apps) in the spresense repository has been changed since SDK3.0.0. If you cloned the repository before SDK2.x, please run the following instructions to update the URL of the submodule.
 
 ```
 $ cd spresense
@@ -33,52 +33,52 @@ $ git submodule sync
 $ git submodule update
 ```
 * `<remote branch>`
-  * master ブランチの場合: `origin/master`
-  * develop ブランチの場合: `origin/develop`
+  * For master branch: `origin/master`
+  * For develop branch: `origin/develop`
 
-# Spresense SDK のビルド手順
+# Spresense SDK build instructions
 
-ビルド手順は [Spresense SDK スタートガイド](https://developer.sony.com/develop/spresense/docs/sdk_set_up_en.html) に記載されています。
+Build instructions are documented at [Spresense SDK Getting Started Guide](https://developer.sony.com/develop/spresense/docs/sdk_set_up_en.html).
 
-## 事前準備
+## Prerequisites
 
-クロスコンパイルに必要なパッケージと GCC ARM ツールチェーンをインストールします。
+Install the necessary packages and GCC ARM toolchain for cross-compilation.
 ```
 $ wget https://raw.githubusercontent.com/sonydevworld/spresense/master/install-tools.sh
 $ bash install-tools.sh
 ```
 
-## ビルド
+## Build
 
-{SDK_FULL} をクローンしたフォルダに移動し、`sdk` フォルダに入ります。
+Go to the folder where you cloned the {SDK_FULL}, and enter the `sdk` folder name:
 ``` bash
 $ cd spresense/sdk
 ```
-SDK の設定（コンフィグ）を行います。
+Set up the SDK configuration
 ``` bash
 $ tools/config.py examples/hello
 ```
-サンプルのイメージをビルドします。
+Build the example image:
 ``` bash
 $ make
 ```
 
-この手順が正常に終わると、`sdk` フォルダに `nuttx.spk` ファイルができます。
-このファイルが最終的な成果物で、ボードに書き込むことができます。
+A `nuttx.spk` file appears in the `sdk` folder when this step has successfully finished.
+This file is the final result and can be flashed into the your board.
 
-# Docker を使う場合
+# Using docker
 
-Spresense SDK のビルドに必要なものがすべて揃った、ビルド済みの Docker コンテナが用意されています。
+A pre-compiled docker container is available with all the pre-requisite that is needed in order to build the Spresense SDK.
 
-使い始めるには、次のように入力するだけです。
+In order to start using it simply type:
 
 ```
 $ source spresense_env.sh
 ```
 
-このスクリプトは `spresense` というエイリアスを作成します。通常の SDK のビルドスクリプトや Make コマンドの前に、このエイリアスを付けて実行します。
+This script will create an alias `spresense` which should proceed the regular SDK build scripts and Make commands.
 
-例:
+Examples:
 ```
 SpresenseSDK: $ spresense tools/config.py examples/hello
 SpresenseSDK: $ spresense make
